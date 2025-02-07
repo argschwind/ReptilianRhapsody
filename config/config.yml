@@ -1,0 +1,13 @@
+
+# file containing all samples, one sample id per line with optional tab-separated second column for
+# cell numbers (no header)
+samples_file: "config/samples.tsv"
+
+# tab-separated file containing all input files per sample in long format (one file per line)
+reads_file: "config/read_files.tsv"
+
+# reference file for alignments
+reference: "/g/steinmetz/project/otar/references/test/allgRNA_fullref_full_gtf_2.2/Rhap_reference.tar.gz"
+
+# number of threads to use to run BD Rhapsody pipeline
+threads: 32

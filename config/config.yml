@@ -11,3 +11,7 @@ reference: "/g/steinmetz/project/otar/references/test/allgRNA_fullref_full_gtf_2
 
 # number of threads to use to run BD Rhapsody pipeline
 threads: 32
+
+# to run on a HPC cluster specify a slurm partition with enough memory to run the main pipeline
+# other jobs will run on the default partition, or the one provided in a used snakemake profile
+bigmem_partition: "bigmem"

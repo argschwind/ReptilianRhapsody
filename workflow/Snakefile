@@ -8,35 +8,40 @@ include: "scripts/add_samples_to_config.py"
 # process data for all samples
 rule all:
   input:
-    expand("results/{sample}/{file}", sample = config["samples"],
+    expand("results/{sample}/{sample}_{file}", sample = config["samples"],
            file = ["Seurat.rds", "Pipeline_Report.html"])
 
 # create the yaml file specifying all input and pipeline parameters for one sample
 rule make_input_yml:
   input: 
     reads = lambda wildcards: config["read_files"][wildcards.sample],
-   # reference = config["reference"]
-  output: "results/{sample}/input.yml"
+    reference = config["reference"]
+  output: "results/{sample}/{sample}_input.yml"
   params:
     cell_numbers = lambda wildcards: config["cell_numbers"][wildcards.sample],
     generate_bam = True,
     threads = config["threads"]
   conda: "envs/run_workflow.yml"
+  resources:
+    mem_mb = "2000",
+    runtime = "1h"
   script:
     "scripts/make_input_yml.R"
 
 # run BD Rhapsody pipeline
 rule run_rhapsody:
-  input: "results/{sample}/input.yml"
+  input: "results/{sample}/{sample}_input.yml"
   output: 
-    seurat = "results/{sample}/Seurat.rds",
-    report = "results/{sample}/Pipeline_Report.html"
+    seurat = "results/{sample}/{sample}_Seurat.rds",
+    report = "results/{sample}/{sample}_Pipeline_Report.html"
+  log: "results/{sample}/Logs/std_error.log"
   params:
     outdir = "results/{sample}"
   conda: "envs/run_workflow.yml"
   threads: config["threads"]
   resources:
+    slurm_partition = config["bigmem_partition"],
     mem_mb = "128000",
-    runtime = "48h"
+    runtime = "24h"
   shell:
-    "rhapsody pipeline --outdir {params.outdir} {input}"
+    "rhapsody pipeline --outdir {params.outdir} {input} 2> {log}"

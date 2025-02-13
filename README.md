@@ -1,4 +1,4 @@
-<img src="hex_sticker.png" alt="hex sticker" align="right" width="150"/>
+<img src="hex_sticker.png" alt="hex sticker" align="right" width="175"/>
 
 # ReptilianRhapsody
 
@@ -7,7 +7,8 @@ parallel.
 
 ## Configuring the pipeline
 
-To configure the pipeline following config files have to be edited or created:
+To configure the pipeline following config files must be edited or created to specify input files
+and pipeline parameters:
 
 **config/config.yml**
 
@@ -26,7 +27,7 @@ each sample. See existing file for example.
 
 A tab-delimited table listing all input fastq files for all sample, one file per line. Contains a
 header line with column names (sample, file). This allows providing multiple input files per sample
-on multiple lines. See exisiting file for example.
+on multiple lines. See existing file for example.
 
 ## Running the pipeline
 To run the pipeline after setting up the configuration files run the following command:

@@ -1,4 +1,6 @@
 
+# Samples and input files --------------------------------------------------------------------------
+
 # file containing all samples, one sample id per line with optional tab-separated second column for
 # cell numbers (no header)
 samples_file: "config/samples.tsv"
@@ -6,8 +8,22 @@ samples_file: "config/samples.tsv"
 # tab-separated file containing all input files per sample in long format (one file per line)
 reads_file: "config/read_files.tsv"
 
-# reference file for alignments
-reference: "/g/steinmetz/project/otar/references/test/allgRNA_fullref_full_gtf_2.2/Rhap_reference.tar.gz"
+# Alignment reference ------------------------------------------------------------------------------
+
+# alignment reference to use with the Rhapsody pipeline. if you have an existing reference you would
+# like to use, provide it here (all files need to be provided using absolute paths!). else the
+# workflow will try to create a new reference in the specified location based on the input files
+# specified in 'make_reference'
+reference: "/g/steinmetz/gschwind/otar/promoter_screen_pilots/resources/alignment_reference/Rhap_reference.tar.gz"
+
+# if the specified reference above doesn't exist, specify input fasta, gtf, optional extra sequences
+# to build an aligment reference (all files need to be provided using absolute paths!)
+make_reference:
+  genome_fasta: "/g/steinmetz/brausche/genomes/alias/hg38/fasta/default/hg38.fa"
+  genome_gtf: "/g/steinmetz/brausche/genomes/alias/hg38/gencode_gtf/default/hg38.gtf"
+  extra_sequences: "/g/steinmetz/gschwind/otar/promoter_screen_pilots/resources/guide_vector_seqs.fasta"
+
+# Processing data ----------------------------------------------------------------------------------
 
 # number of threads to use to run BD Rhapsody pipeline
 threads: 32

@@ -1,8 +1,5 @@
 ## Create yaml file containing all inputs for the BD Rhapsody pipeline for one sample
 
-## REMOVE ##
-snakemake@input$reference <- "/g/steinmetz/project/otar/references/test/allgRNA_fullref_full_gtf_2.2/Rhap_reference.tar.gz"
-
 # required packages
 suppressPackageStartupMessages(
   library(yaml)

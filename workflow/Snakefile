@@ -1,4 +1,6 @@
 
+import os
+
 # main config file
 configfile: "config/config.yml"
 
@@ -10,6 +12,43 @@ rule all:
   input:
     expand("results/{sample}/{sample}_{file}", sample = config["samples"],
            file = ["Seurat.rds", "Pipeline_Report.html"])
+           
+
+# Rules to make alignment reference (optional) -----------------------------------------------------
+
+# get optional extra sequences file if specified
+def get_extra_seqs_file(wildcards):
+  file = config["make_reference"]["extra_sequences"]
+  if ((file == "None") or (file == "Null") or (file == "NULL")):
+    file = []
+  return file
+
+# create input yml file to make alignment reference
+rule make_reference_yml:
+  input:
+    genome_fasta = config["make_reference"]["genome_fasta"],
+    genome_gtf = config["make_reference"]["genome_gtf"],
+    extra_sequences = get_extra_seqs_file
+  output: "resources/alignment_reference/reference_input.yml"
+  conda: "envs/run_workflow.yml"
+  resources:
+    mem_mb = "2000",
+    runtime = "1h"  
+  script:
+    "scripts/make_reference_yml.R"
+
+# optional rule to create alignment reference
+rule make_alignment_reference:
+  input: "resources/alignment_reference/reference_input.yml"
+  output: "resources/alignment_reference/Rhap_reference.tar.gz"
+  conda: "envs/run_workflow.yml"
+  resources:
+    mem_mb = "32000",
+    runtime = "12h"  
+  shell:
+   "rhapsody makeRhapReference --outdir resources/alignment_reference {input}"
+
+# Rules to process sequencing data -----------------------------------------------------------------
 
 # create the yaml file specifying all input and pipeline parameters for one sample
 rule make_input_yml:

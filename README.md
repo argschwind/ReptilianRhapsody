@@ -12,10 +12,13 @@ and pipeline parameters:
 
 **config/config.yml**
 
-reference: Specify path to reference file to use for Rhapsody pipeline
-threads: The number of threads to use per submitted job
-bigmem_partition: Slurm partition to use for memory heavy jobs. Needs to allow at least 128G memory
-for 24h
+- reference: Specify path to reference file to use for Rhapsody pipeline (absolute file path). If the
+  reference needs to be created, specify input files in 'make_reference'
+- make_reference: List input genome annotations and optional gRNA sequences in case the aligment
+  reference needs to be created.
+- threads: The number of threads to use per submitted job
+- bigmem_partition: Slurm partition to use for memory heavy jobs. Suggested to allow at least 128G
+  memory for 24h
 
 **config/samples.tsv**
 

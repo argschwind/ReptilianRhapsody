@@ -12,11 +12,10 @@ rule all:
   input:
     expand("results/{sample}/{sample}_{file}", sample = config["samples"],
            file = ["Seurat.rds", "Pipeline_Report.html"])
-           
 
 # Rules to make alignment reference (optional) -----------------------------------------------------
 
-# get optional extra sequences file if specified
+# input function to get optional extra sequences file if specified
 def get_extra_seqs_file(wildcards):
   file = config["make_reference"]["extra_sequences"]
   if ((file == "None") or (file == "Null") or (file == "NULL")):
@@ -43,17 +42,32 @@ rule make_alignment_reference:
   output: "resources/alignment_reference/Rhap_reference.tar.gz"
   conda: "envs/run_workflow.yml"
   resources:
-    mem_mb = "32000",
+    slurm_partition = config["bigmem_partition"],
+    mem_mb = "128000",
     runtime = "12h"  
   shell:
    "rhapsody makeRhapReference --outdir resources/alignment_reference {input}"
 
 # Rules to process sequencing data -----------------------------------------------------------------
 
+# input function to get read files (symlinks) for one sample
+def get_read_files(wildcards):
+  read_files = config["read_files"][wildcards.sample]
+  read_files = ["resources/reads/" + s for s in read_files]
+  return(read_files)
+
+# create local symlink for input file to prevent potential file name issues
+rule create_reads_symlink:
+  input: lambda wildcards: config["symlinks"][wildcards.file]
+  output: "resources/reads/{file}"
+  conda: "envs/run_workflow.yml"
+  shell:
+    "ln -s {input} {output}"
+
 # create the yaml file specifying all input and pipeline parameters for one sample
 rule make_input_yml:
-  input: 
-    reads = lambda wildcards: config["read_files"][wildcards.sample],
+  input:
+    reads = get_read_files,
     reference = config["reference"]
   output: "results/{sample}/{sample}_input.yml"
   params:
@@ -70,7 +84,7 @@ rule make_input_yml:
 # run BD Rhapsody pipeline
 rule run_rhapsody:
   input: "results/{sample}/{sample}_input.yml"
-  output: 
+  output:
     seurat = "results/{sample}/{sample}_Seurat.rds",
     report = "results/{sample}/{sample}_Pipeline_Report.html"
   log: "results/{sample}/Logs/std_error.log"

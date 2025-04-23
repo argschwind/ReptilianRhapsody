@@ -11,13 +11,12 @@ reads_file: "config/read_files.tsv"
 # Alignment reference ------------------------------------------------------------------------------
 
 # alignment reference to use with the Rhapsody pipeline. if you have an existing reference you would
-# like to use, provide it here (all files need to be provided using absolute paths!). else the
-# workflow will try to create a new reference in the specified location based on the input files
-# specified in 'make_reference'
-reference: "/g/steinmetz/gschwind/otar/promoter_screen_pilots/resources/alignment_reference/Rhap_reference.tar.gz"
+# like to use, provide it here. else the workflow will try to create a new reference in the
+# specified location based on the input files specified in 'make_reference'
+reference: "resources/alignment_reference/Rhap_reference.tar.gz"
 
 # if the specified reference above doesn't exist, specify input fasta, gtf, optional extra sequences
-# to build an aligment reference (all files need to be provided using absolute paths!)
+# to build an aligment reference
 make_reference:
   genome_fasta: "/g/steinmetz/brausche/genomes/alias/hg38/fasta/default/hg38.fa"
   genome_gtf: "/g/steinmetz/brausche/genomes/alias/hg38/gencode_gtf/default/hg38.gtf"

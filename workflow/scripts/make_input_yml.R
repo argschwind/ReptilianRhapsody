@@ -52,6 +52,7 @@ if (!is.na(snakemake@params$cell_numbers)) {
 
 # create list for other pipeline arguments
 arguments <- list(
+  Run_Name = snakemake@wildcards$sample,
   Generate_Bam = verbatim_logical(snakemake@params$generate_bam),
   Maximum_Threads = as.integer(snakemake@params$threads)
 )
